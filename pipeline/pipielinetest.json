@@ -1,0 +1,203 @@
+{
+	"name": "pipielinetest",
+	"properties": {
+		"activities": [
+			{
+				"name": "dataflow_agency",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load agency md to sql db",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dataflow_emp",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load employee md to sql db",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dataflow_title",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load title master data to sql db",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dataflow_payroll2020",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "dataflow_agency",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "dataflow_title",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load payroll 2020 data to sql db",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "datafllowpayroll_2021",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "dataflow_emp",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "dataflow_title",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow load payroll 2021 data to sql db",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "dataflow_summary",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "dataflow_payroll2020",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "datafllowpayroll_2021",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "dataflow summary",
+						"type": "DataFlowReference",
+						"parameters": {
+							"dataflow_param_fiscalyear": "2020"
+						}
+					},
+					"staging": {
+						"linkedService": {
+							"referenceName": "ls_adls_payroll",
+							"type": "LinkedServiceReference"
+						},
+						"folderPath": "pyarollcontainer/dirstaging"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2024-07-29T08:03:46Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

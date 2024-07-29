@@ -1,0 +1,25 @@
+{
+	"name": "payrollsummary",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_adls_payroll",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "payrollsummary.csv",
+				"folderPath": "dirstaging",
+				"fileSystem": "pyarollcontainer"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

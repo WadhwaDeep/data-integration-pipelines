@@ -1,0 +1,55 @@
+{
+	"name": "dataflow load title master data to sql db",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_adls_title_md",
+						"type": "DatasetReference"
+					},
+					"name": "sourcetableadlstitlemasterdata"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sqldb_title_md",
+						"type": "DatasetReference"
+					},
+					"name": "destinationtablesqltitlemasterdata"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourcetableadlstitlemasterdata",
+				"sourcetableadlstitlemasterdata sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          TitleCode as string,",
+				"          TitleDescription as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TitleCode,",
+				"          TitleDescription",
+				"     )) ~> destinationtablesqltitlemasterdata"
+			]
+		}
+	}
+}

@@ -1,0 +1,55 @@
+{
+	"name": "dataflow load agency md to sql db",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_adls_agency_md",
+						"type": "DatasetReference"
+					},
+					"name": "sourceadlstableagencymd"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_sqldb_agency_md",
+						"type": "DatasetReference"
+					},
+					"name": "destinationsqltableagencymd"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> sourceadlstableagencymd",
+				"sourceadlstableagencymd sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AgencyID as string,",
+				"          AgencyName as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          AgencyID,",
+				"          AgencyName",
+				"     )) ~> destinationsqltableagencymd"
+			]
+		}
+	}
+}

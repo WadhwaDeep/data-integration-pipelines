@@ -1,0 +1,12 @@
+{
+	"name": "ls_synapse_payroll",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDW",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=syanpsepayroll.sql.azuresynapse.net;initial catalog=sqldedicatedpool;user id=udacityadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDMwQUE2QkQ0LTI3RUUtNDRCQS05RUE0LTc2Mzc4RDY4NDI2Nl83MWZlYzg5NS0yZDVmLTQ3ZWQtYjJkYS1lZTQzYTBlNzJlNWYiDQp9"
+		}
+	}
+}
